@@ -19,3 +19,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('user/activation/{token}', 'Auth\RegisterController@activateUser')->name('user.activate');
+Route::resource('polls', 'PollController');
