@@ -32,16 +32,24 @@ class PollController extends Controller
      */
     public function index()
     {
-        $polls = DB::table('polls')
-            ->leftJoin('answers', 'polls.id', '=', 'answers.poll_id')
-            ->where('polls.active', '=', 1)
-            ->where('polls.public', '=', 1)
-            ->where(function ($query) {
-                $query->whereNull('answers.user_id')
-                    ->orWhere('answers.user_id', '!=', Auth::user()->id);
-            })
-            ->select('polls.*')
-            ->get();
+        $polls = DB::select(
+            "   SELECT *
+                FROM
+                  polls
+                WHERE
+                  polls.id NOT IN (
+                    SELECT answers.poll_id
+                    FROM
+                      answers
+                    WHERE
+                      answers.user_id = :user_id
+                  )
+                  AND polls.public = 1
+                  AND polls.active = 1;",
+            [
+                'user_id' => Auth::user()->id,
+            ]
+        );
 
         // load the view and pass the polls
         return view('polls.index')

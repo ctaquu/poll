@@ -119,7 +119,6 @@ class UserController extends Controller
         $rules = array(
             'name' => 'required',
             'email' => 'required|email',
-            'ban' => 'required',
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -130,14 +129,14 @@ class UserController extends Controller
 
         // process the login
         if ($validator->fails()) {
-            return redirect('users/' . $user->id . '/edit')
+            return redirect('admin/users/' . $user->id . '/edit')
                 ->withErrors($validator)
                 ->withInput(Input::except('password'));
         } else {
             // store
             $user->name = Input::get('name');
             $user->email = Input::get('email');
-            $user->ban = Input::get('ban');
+            $user->ban = !empty(Input::get('ban')) ? Input::get('ban') : 0;
             $user->save();
 
             // redirect

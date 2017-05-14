@@ -27,7 +27,13 @@ Auth::routes();
 
 Route::get('user/activation/{token}', 'Auth\RegisterController@activateUser')->name('user.activate');
 
+/** admin section */
 Route::resource('admin/polls', 'Admin\PollController');
 Route::resource('admin/users', 'Admin\UserController');
+Route::get('admin/results', 'Admin\ResultController@index')->name('admin.results');
+Route::get('admin/results/{poll_id}', 'Admin\ResultController@show')->name('admin.results.show');
 
+/** user section */
 Route::resource('polls', 'PollController');
+Route::get('results', 'ResultController@index')->name('user.results');
+Route::get('results/{poll_id}', 'ResultController@show')->name('user.results.show');

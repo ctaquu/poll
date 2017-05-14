@@ -39,9 +39,11 @@
                         &nbsp;@if (Auth::user())
                             @if (Auth::user()->role === 'admin')
                                 <li><a href="{{ url('admin/polls') }}">Polls</a></li>
+                                <li><a href="{{ url('admin/results') }}">Results</a></li>
                                 <li><a href="{{ url('admin/users') }}">Users</a></li>
                             @else
                                 <li><a href="{{ url('/polls') }}">Polls</a></li>
+                                <li><a href="{{ url('/results') }}">Results</a></li>
                             @endif
                         @endif
                     </ul>

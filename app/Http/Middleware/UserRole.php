@@ -22,6 +22,11 @@ class UserRole
             return redirect('unauthorized');
         }
 
+        if (Auth::user()->ban === 1) {
+            Auth::logout();
+            return redirect('/');
+        }
+
         return $next($request);
     }
 }

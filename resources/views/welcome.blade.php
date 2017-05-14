@@ -98,9 +98,11 @@
 {{--                        <a href="{{ url('/home') }}">Home</a>--}}
                         @if (Auth::user()->role === 'admin')
                             <a href="{{ url('admin/polls') }}">Polls</a>
+                            <a href="{{ url('admin/results') }}">Results</a>
                             <a href="{{ url('admin/users') }}">Users</a>
                         @else
                             <a href="{{ url('/polls') }}">Polls</a>
+                            <a href="{{ url('/results') }}">Results</a>
                         @endif
 
                     @else

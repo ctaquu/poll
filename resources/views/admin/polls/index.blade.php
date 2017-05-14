@@ -33,7 +33,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($polls as $key => $value)
+                        @forelse($polls as $key => $value)
                             <tr>
                                 <td>{{ $value->id }}</td>
                                 <td>{{ $value->title }}</td>
@@ -57,7 +57,9 @@
 
                                 </td>
                             </tr>
-                        @endforeach
+                            @empty
+                                <tr><td>no new polls...</td></tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
