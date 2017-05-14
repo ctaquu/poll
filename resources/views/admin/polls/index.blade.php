@@ -10,8 +10,8 @@
                 <div class="panel-body">
                     <nav class="navbar navbar-inverse">
                         <ul class="nav navbar-nav">
-                            <li><a href="{{ URL::to('polls') }}">View All Polls</a></li>
-                            <li><a href="{{ URL::to('polls/create') }}">Create a Poll</a>
+                            <li><a href="{{ URL::to('admin/polls') }}">View All Polls</a></li>
+                            <li><a href="{{ URL::to('admin/polls/create') }}">Create a Poll</a>
                         </ul>
                     </nav>
 
@@ -44,16 +44,16 @@
                                 <td>
 
                                     <!-- delete the poll (uses the destroy method DESTROY /polls/{id} -->
-                                    {{ Form::open(array('url' => 'polls/' . $value->id, 'class' => 'pull-right')) }}
+                                    {{ Form::open(array('url' => 'admin/polls/' . $value->id, 'class' => 'pull-right')) }}
                                     {{ Form::hidden('_method', 'DELETE') }}
                                     {{ Form::submit('Delete this Poll', array('class' => 'btn btn-warning')) }}
                                     {{ Form::close() }}
 
                                     <!-- show the poll (uses the show method found at GET /polls/{id} -->
-                                    <a class="btn btn-small btn-success" href="{{ URL::to('polls/' . $value->id) }}">Show this Poll</a>
+                                    <a class="btn btn-small btn-success" href="{{ URL::to('admin/polls/' . $value->id) }}">Show this Poll</a>
 
                                     <!-- edit this poll (uses the edit method found at GET /polls/{id}/edit -->
-                                    <a class="btn btn-small btn-info" href="{{ URL::to('polls/' . $value->id . '/edit') }}">Edit this Poll</a>
+                                    <a class="btn btn-small btn-info" href="{{ URL::to('admin/polls/' . $value->id . '/edit') }}">Edit this Poll</a>
 
                                 </td>
                             </tr>

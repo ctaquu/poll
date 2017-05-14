@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Unauthorized</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -62,6 +62,11 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
+            .red-text {
+                color: red;
+            }
+
         </style>
     </head>
     <body>
@@ -78,35 +83,21 @@
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             {{ csrf_field() }}
                         </form>
-{{--                        <a href="{{ url('/home') }}">Home</a>--}}
-{{--                        <a href="{{ url('/polls') }}">Polls</a>--}}
-                    @else
-                        {{--<a href="{{ url('/login') }}">Login</a>--}}
-                        {{--<a href="{{ url('/register') }}">Register</a>--}}
                     @endif
                 </div>
             @endif
 
             <div class="content">
                 <div class="title m-b-md">
-                    Poll App
+                    401 - Unauthorized !!!
                 </div>
 
+                @if (Session::has('message'))
+                    <div class="alert alert-info red-text">{{ Session::get('message') }}</div>
+                @endif
+
                 <div class="links">
-                    @if (Auth::check())
-
-{{--                        <a href="{{ url('/home') }}">Home</a>--}}
-                        @if (Auth::user()->role === 'admin')
-                            <a href="{{ url('admin/polls') }}">Polls</a>
-                            <a href="{{ url('admin/users') }}">Users</a>
-                        @else
-                            <a href="{{ url('/polls') }}">Polls</a>
-                        @endif
-
-                    @else
-                        <a href="{{ url('/login') }}">Login</a>
-                        <a href="{{ url('/register') }}">Register</a>
-                    @endif
+                    <a href="{{ url('/') }}">Home</a>
                 </div>
             </div>
         </div>

@@ -10,8 +10,8 @@
                 <div class="panel-body">
                     <nav class="navbar navbar-inverse">
                         <ul class="nav navbar-nav">
-                            <li><a href="{{ URL::to('polls') }}">View All Polls</a></li>
-                            <li><a href="{{ URL::to('polls/create') }}">Create a Poll</a>
+                            <li><a href="{{ URL::to('admin/polls') }}">View All Polls</a></li>
+                            <li><a href="{{ URL::to('admin/polls/create') }}">Create a Poll</a>
                         </ul>
                     </nav>
 
@@ -20,7 +20,7 @@
                     <!-- if there are creation errors, they will show here -->
                     {{ HTML::ul($errors->all()) }}
 
-                    {{ Form::model($poll, array('route' => array('polls.update', $poll->id), 'method' => 'PUT')) }}
+                    {{ Form::model($poll, ['url' => "admin/polls/$poll->id", 'method' => 'PUT']) }}
 
                     <div class="form-group">
                         {{ Form::label('title', 'Title') }}

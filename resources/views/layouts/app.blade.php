@@ -28,15 +28,22 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
+                    {{--<a class="navbar-brand" href="{{ url('/') }}">--}}
+                        {{--{{ config('app.name', 'Laravel') }}--}}
+                    {{--</a>--}}
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        &nbsp;@if (Auth::user())
+                            @if (Auth::user()->role === 'admin')
+                                <li><a href="{{ url('admin/polls') }}">Polls</a></li>
+                                <li><a href="{{ url('admin/users') }}">Users</a></li>
+                            @else
+                                <li><a href="{{ url('/polls') }}">Polls</a></li>
+                            @endif
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->

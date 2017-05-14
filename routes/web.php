@@ -15,8 +15,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('unauthorized', function () {
+    return view('unauthorized');
+})->name('unauthorized');
+
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 Route::get('user/activation/{token}', 'Auth\RegisterController@activateUser')->name('user.activate');
+
+Route::resource('admin/polls', 'Admin\PollController');
+Route::resource('admin/users', 'Admin\UserController');
+
 Route::resource('polls', 'PollController');

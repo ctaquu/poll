@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Poll;
@@ -19,7 +19,7 @@ class PollController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role.user');
+        $this->middleware('role.admin');
     }
 
     /**
@@ -33,7 +33,7 @@ class PollController extends Controller
         $polls = Poll::all();
 
         // load the view and pass the polls
-        return view('polls.index')
+        return view('admin.polls.index')
             ->with('polls', $polls);
     }
 
@@ -44,7 +44,7 @@ class PollController extends Controller
      */
     public function create()
     {
-        return view('polls.create');
+        return view('admin.polls.create');
     }
 
     /**
@@ -62,7 +62,7 @@ class PollController extends Controller
 
         // process the login
         if ($validator->fails()) {
-            return redirect('polls/create')
+            return redirect('admin/polls/create')
                 ->withErrors($validator)
                 ->withInput(Input::except('password'));
         } else {
@@ -75,7 +75,7 @@ class PollController extends Controller
 
             // redirect
             Session::flash('message', 'Successfully created poll!');
-            return redirect('polls');
+            return redirect('admin/polls');
         }
     }
 
@@ -88,7 +88,7 @@ class PollController extends Controller
     public function show(Poll $poll)
     {
         // show the view and pass the poll to it
-        return view('polls.show')
+        return view('admin.polls.show')
             ->with('poll', $poll);
     }
 
@@ -100,7 +100,7 @@ class PollController extends Controller
      */
     public function edit(Poll $poll)
     {
-        return view('polls.edit')
+        return view('admin.polls.edit')
             ->with('poll', $poll);
     }
 
@@ -120,7 +120,7 @@ class PollController extends Controller
 
         // process the login
         if ($validator->fails()) {
-            return redirect('polls/' . $poll->getId() . '/edit')
+            return redirect('admin/polls/' . $poll->getId() . '/edit')
                 ->withErrors($validator)
                 ->withInput(Input::except('password'));
         } else {
@@ -130,7 +130,7 @@ class PollController extends Controller
 
             // redirect
             Session::flash('message', 'Successfully updated polls!');
-            return redirect('polls');
+            return redirect('admin/polls');
         }
     }
 
@@ -147,6 +147,6 @@ class PollController extends Controller
         // redirect
         Session::flash('message', 'Successfully deleted the poll!');
 
-        return redirect('polls');
+        return redirect('admin/polls');
     }
 }

@@ -10,8 +10,8 @@
                 <div class="panel-body">
                     <nav class="navbar navbar-inverse">
                         <ul class="nav navbar-nav">
-                            <li><a href="{{ URL::to('polls') }}">View All Polls</a></li>
-                            <li><a href="{{ URL::to('polls/create') }}">Create a Poll</a>
+                            <li><a href="{{ URL::to('admin/polls') }}">View All Polls</a></li>
+                            <li><a href="{{ URL::to('admin/polls/create') }}">Create a Poll</a>
                         </ul>
                     </nav>
 
