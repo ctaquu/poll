@@ -32,6 +32,10 @@
                         {{ Form::text('question', Input::old('question'), array('class' => 'form-control')) }}
                         {{ Form::label('possible_answers', 'Possible Answers for Question (separated by commas aka: , )') }}
                         {{ Form::text('possible_answers', Input::old('possible_answers'), array('class' => 'form-control')) }}
+                        {{ Form::label('active', 'Active') }}
+                        {{ Form::checkbox('active') }}
+                        {{ Form::label('public', 'Public') }}
+                        {{ Form::checkbox('public') }}
                     </div>
 
                     {{ Form::submit('Create the Poll!', array('class' => 'btn btn-primary')) }}

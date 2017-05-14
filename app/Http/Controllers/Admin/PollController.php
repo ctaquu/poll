@@ -31,23 +31,6 @@ class PollController extends Controller
      */
     public function index()
     {
-//        /** @var Poll $poll */
-//        $poll = Poll::find(1);
-//
-////        var_dump($poll);
-////        var_dump($poll->question);
-//        $q = new Question();
-//        $q->text = 'novi tekst...';
-//
-//        $poll->question()->save($q);
-//
-//        $poll->save();
-//        var_dump($poll->question);
-//
-//
-//
-//        die;
-
         // get all the polls
         $polls = Poll::all();
 
@@ -99,8 +82,8 @@ class PollController extends Controller
         // store poll
         $poll = new Poll();
         $poll->title = Input::get('title');
-        $poll->active = 1;
-        $poll->public = 1;
+        $poll->active = !empty(Input::get('active')) ? Input::get('active') : 0;
+        $poll->public = !empty(Input::get('public')) ? Input::get('public') : 0;
         $poll->save();
 
         // store question
@@ -179,6 +162,8 @@ class PollController extends Controller
 
         // store poll
         $poll->title = Input::get('title');
+        $poll->active = !empty(Input::get('active')) ? Input::get('active') : 0;
+        $poll->public = !empty(Input::get('public')) ? Input::get('public') : 0;
         $poll->save();
 
         // store question
