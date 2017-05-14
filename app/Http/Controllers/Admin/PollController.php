@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Poll;
+use App\Models\Poll;
+use App\Models\PossibleAnswer;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
@@ -29,6 +31,23 @@ class PollController extends Controller
      */
     public function index()
     {
+//        /** @var Poll $poll */
+//        $poll = Poll::find(1);
+//
+////        var_dump($poll);
+////        var_dump($poll->question);
+//        $q = new Question();
+//        $q->text = 'novi tekst...';
+//
+//        $poll->question()->save($q);
+//
+//        $poll->save();
+//        var_dump($poll->question);
+//
+//
+//
+//        die;
+
         // get all the polls
         $polls = Poll::all();
 
@@ -50,39 +69,62 @@ class PollController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $rules = [
             'title' => 'required',
+            'question' => 'required',
+            'possible_answers' => 'required', //TODO: create custom validation to do all checks
         ];
         $validator = Validator::make(Input::all(), $rules);
 
         // process the login
         if ($validator->fails()) {
             return redirect('admin/polls/create')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
-        } else {
-            // store
-            $poll = new Poll();
-            $poll->title = Input::get('title');
-            $poll->active = 1;
-            $poll->public = 1;
-            $poll->save();
-
-            // redirect
-            Session::flash('message', 'Successfully created poll!');
-            return redirect('admin/polls');
+                ->withInput()
+                ->withErrors($validator);
         }
+
+        $possibleAnswers = explode(',', Input::get('possible_answers'));
+
+        if (count($possibleAnswers) < 2) {
+            return redirect('admin/polls/create')
+                ->withInput()
+                ->withErrors('Need at least two possible answers!!!');
+        }
+
+        // store poll
+        $poll = new Poll();
+        $poll->title = Input::get('title');
+        $poll->active = 1;
+        $poll->public = 1;
+        $poll->save();
+
+        // store question
+        $question = new Question();
+        $question->text = Input::get('question');
+        $poll->question()->save($question);
+
+        // store possible answers
+        foreach ($possibleAnswers as $possibleAnswerText) {
+            $possibleAnswer = new PossibleAnswer();
+            $possibleAnswer->text = $possibleAnswerText;
+            $question->possibleAnswers()->save($possibleAnswer);
+        }
+
+        // redirect
+        Session::flash('message', 'Successfully created poll!');
+        return redirect('admin/polls');
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Poll  $poll
+     * @param  \App\Poll $poll
      * @return \Illuminate\Http\Response
      */
     public function show(Poll $poll)
@@ -95,7 +137,7 @@ class PollController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Poll  $poll
+     * @param  \App\Poll $poll
      * @return \Illuminate\Http\Response
      */
     public function edit(Poll $poll)
@@ -107,14 +149,16 @@ class PollController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Poll  $poll
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Poll $poll
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Poll $poll)
     {
         $rules = array(
             'title' => 'required',
+            'question' => 'required',
+            'possible_answers' => 'required', //TODO: create custom validation to do all checks
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -122,22 +166,47 @@ class PollController extends Controller
         if ($validator->fails()) {
             return redirect('admin/polls/' . $poll->getId() . '/edit')
                 ->withErrors($validator)
-                ->withInput(Input::except('password'));
-        } else {
-            // store
-            $poll->title = Input::get('title');
-            $poll->save();
-
-            // redirect
-            Session::flash('message', 'Successfully updated polls!');
-            return redirect('admin/polls');
+                ->withInput();
         }
+
+        $possibleAnswers = explode(',', Input::get('possible_answers'));
+
+        if (count($possibleAnswers) < 2) {
+            return redirect('admin/polls/create')
+                ->withInput()
+                ->withErrors('Need at least two possible answers!!!');
+        }
+
+        // store poll
+        $poll->title = Input::get('title');
+        $poll->save();
+
+        // store question
+        $poll->question->text = Input::get('question');
+        $poll->question->save();
+
+        // delete old possible answers
+        foreach ($poll->question->possibleAnswers as $possibleAnswer) {
+            $possibleAnswer->delete();
+        }
+
+        // store possible answers
+        foreach ($possibleAnswers as $possibleAnswerText) {
+            $possibleAnswer = new PossibleAnswer();
+            $possibleAnswer->text = $possibleAnswerText;
+            $poll->question->possibleAnswers()->save($possibleAnswer);
+        }
+
+        // redirect
+        Session::flash('message', 'Successfully updated polls!');
+        return redirect('admin/polls');
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Poll  $poll
+     * @param  \App\Poll $poll
      * @return \Illuminate\Http\Response
      */
     public function destroy(Poll $poll)

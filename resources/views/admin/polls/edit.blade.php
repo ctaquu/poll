@@ -27,6 +27,20 @@
                         {{ Form::text('title', null, array('class' => 'form-control')) }}
                     </div>
 
+                    <div class="form-group">
+                        @php
+                            $possibleAnswersString = '';
+                            foreach ($poll->question->possibleAnswers as $possibleAnswer) {
+                                $possibleAnswersString .= ($possibleAnswer->text . ',');
+                            }
+                            $possibleAnswersString = substr($possibleAnswersString, 0, strlen($possibleAnswersString)-1);
+                        @endphp
+                        {{ Form::label('question', 'Question') }}
+                        {{ Form::text('question', $poll->question->text, array('class' => 'form-control')) }}
+                        {{ Form::label('possible_answers', 'Possible Answers for Question (separated by commas aka: , )') }}
+                        {{ Form::text('possible_answers', $possibleAnswersString, array('class' => 'form-control')) }}
+                    </div>
+
                     {{ Form::submit('Edit the Poll!', array('class' => 'btn btn-primary')) }}
 
                     {{ Form::close() }}

@@ -27,6 +27,13 @@
                         {{ Form::text('title', Input::old('title'), array('class' => 'form-control')) }}
                     </div>
 
+                    <div class="form-group">
+                        {{ Form::label('question', 'Question') }}
+                        {{ Form::text('question', Input::old('question'), array('class' => 'form-control')) }}
+                        {{ Form::label('possible_answers', 'Possible Answers for Question (separated by commas aka: , )') }}
+                        {{ Form::text('possible_answers', Input::old('possible_answers'), array('class' => 'form-control')) }}
+                    </div>
+
                     {{ Form::submit('Create the Poll!', array('class' => 'btn btn-primary')) }}
 
                     {{ Form::close() }}
