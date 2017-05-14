@@ -10,8 +10,6 @@
                 <div class="panel-body">
                     <nav class="navbar navbar-inverse">
                         <ul class="nav navbar-nav">
-                            <li><a href="{{ URL::to('polls') }}">View All Polls</a></li>
-                            <li><a href="{{ URL::to('polls/create') }}">Create a Poll</a>
                         </ul>
                     </nav>
 
@@ -23,41 +21,14 @@
                     @endif
 
                     <table class="table table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <td>ID</td>
-                            <td>Title</td>
-                            <td>Active</td>
-                            <td>Public</td>
-                            <td>Actions</td>
-                        </tr>
-                        </thead>
                         <tbody>
-                        @foreach($polls as $key => $value)
+                        @forelse($polls as $key => $value)
                             <tr>
-                                <td>{{ $value->id }}</td>
-                                <td>{{ $value->title }}</td>
-                                <td>{{ $value->active }}</td>
-                                <td>{{ $value->public }}</td>
-
-                                <!-- we will also add show, edit, and delete buttons -->
-                                <td>
-
-                                    <!-- delete the poll (uses the destroy method DESTROY /polls/{id} -->
-                                    {{ Form::open(array('url' => 'polls/' . $value->id, 'class' => 'pull-right')) }}
-                                    {{ Form::hidden('_method', 'DELETE') }}
-                                    {{ Form::submit('Delete this Poll', array('class' => 'btn btn-warning')) }}
-                                    {{ Form::close() }}
-
-                                    <!-- show the poll (uses the show method found at GET /polls/{id} -->
-                                    <a class="btn btn-small btn-success" href="{{ URL::to('polls/' . $value->id) }}">Show this Poll</a>
-
-                                    <!-- edit this poll (uses the edit method found at GET /polls/{id}/edit -->
-                                    <a class="btn btn-small btn-info" href="{{ URL::to('polls/' . $value->id . '/edit') }}">Edit this Poll</a>
-
-                                </td>
+                                <td><a href="{{ URL::to('polls/' . $value->id) }}">{{ $value->title }}</a></td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr><td>no new polls...</td></tr>
+                        @endforelse
                         </tbody>
                     </table>
                 </div>

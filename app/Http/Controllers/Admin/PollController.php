@@ -7,6 +7,7 @@ use App\Models\Poll;
 use App\Models\PossibleAnswer;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Validator;
@@ -81,8 +82,7 @@ class PollController extends Controller
 
         // store poll
         $poll = new Poll();
-        $poll->title = Input::get('title');
-        $poll->active = !empty(Input::get('active')) ? Input::get('active') : 0;
+        $poll->title = Input::get('title');$poll->active = !empty(Input::get('active')) ? Input::get('active') : 0;
         $poll->public = !empty(Input::get('public')) ? Input::get('public') : 0;
         $poll->save();
 
@@ -147,7 +147,7 @@ class PollController extends Controller
 
         // process the login
         if ($validator->fails()) {
-            return redirect('admin/polls/' . $poll->getId() . '/edit')
+            return redirect("admin/polls/{$poll->id}/edit")
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -155,35 +155,47 @@ class PollController extends Controller
         $possibleAnswers = explode(',', Input::get('possible_answers'));
 
         if (count($possibleAnswers) < 2) {
-            return redirect('admin/polls/create')
+            return redirect("admin/polls/{$poll->id}/edit")
                 ->withInput()
                 ->withErrors('Need at least two possible answers!!!');
         }
 
-        // store poll
-        $poll->title = Input::get('title');
+        $answers = DB::table('answers')
+            ->where('poll_id', '=', $poll->id)
+            ->get();
+
+        if (count($answers) === 0) {
+
+            // store poll
+            $poll->title = Input::get('title');
+            $poll->save();
+
+            // store question
+            $poll->question->text = Input::get('question');
+            $poll->question->save();
+
+            // delete old possible answers
+            foreach ($poll->question->possibleAnswers as $possibleAnswer) {
+                $possibleAnswer->delete();
+            }
+
+            // store possible answers
+            foreach ($possibleAnswers as $possibleAnswerText) {
+                $possibleAnswer = new PossibleAnswer();
+                $possibleAnswer->text = $possibleAnswerText;
+                $poll->question->possibleAnswers()->save($possibleAnswer);
+            }
+
+            Session::flash('message', 'Successfully updated polls!');
+
+        } else {
+            Session::flash('message', 'Poll has been answered by one or more users already, updated only active and public statuses!');
+        }
+
         $poll->active = !empty(Input::get('active')) ? Input::get('active') : 0;
         $poll->public = !empty(Input::get('public')) ? Input::get('public') : 0;
         $poll->save();
 
-        // store question
-        $poll->question->text = Input::get('question');
-        $poll->question->save();
-
-        // delete old possible answers
-        foreach ($poll->question->possibleAnswers as $possibleAnswer) {
-            $possibleAnswer->delete();
-        }
-
-        // store possible answers
-        foreach ($possibleAnswers as $possibleAnswerText) {
-            $possibleAnswer = new PossibleAnswer();
-            $possibleAnswer->text = $possibleAnswerText;
-            $poll->question->possibleAnswers()->save($possibleAnswer);
-        }
-
-        // redirect
-        Session::flash('message', 'Successfully updated polls!');
         return redirect('admin/polls');
 
     }
